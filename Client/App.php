@@ -7,6 +7,9 @@ use Core\Atm;
 class App
 {
 
+    /**
+     * @throws \Exception
+     */
     public function run(): void
     {
         println("Initializing...");
@@ -16,30 +19,30 @@ class App
             $notes[$note] = (int) readline("Please enter count for {$note} notes: ");
         }
 
-        println('Ready');
-
         $atm = new Atm($notes);
 
         while(true){
             $this->printMenu();
-            $choice = readline("Enter your choice:");
+            $choice = readline("Enter your choice: ");
 
             switch ($choice){
                 case '1':
                     $amount = (int) readline('Enter amount: ');
                     try {
-                        $atm->dispense($amount);
-                        $this->printReport($atm);
+                        $dispensed = $atm->dispense($amount);
+                        $this->printDispensingResult($dispensed);
+                        pressAnyKeyToContinue();
                     }catch (\Exception $e){
                         println($e->getMessage());
+                        pressAnyKeyToContinue();
                     }
                     break;
                 case '2':
                     $this->printReport($atm);
+                    pressAnyKeyToContinue();
                     break;
                 case '3':
                     exit('bye..');
-                    break;
                 default:
                     println('Invalid input. Please try again!');
             }
@@ -56,6 +59,17 @@ class App
         println("3. Exit");
     }
 
+    protected function printDispensingResult($notes): void
+    {
+        $result = 'Dispensing: ';
+
+        $result.= implode(' + ',array_map(function($note,$count){
+            return "{$note}x{$count}";
+        },array_keys($notes),array_values($notes)));
+
+        println($result);
+    }
+
     protected function printReport(Atm $atm): void
     {
         $result = 'Current notes in ATM: ';
@@ -65,7 +79,6 @@ class App
         }
         $result.="Total Cash: {$atm->total()}";
         println($result);
-
     }
 
 }
