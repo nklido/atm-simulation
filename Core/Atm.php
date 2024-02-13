@@ -6,23 +6,24 @@ use Exception;
 
 class Atm{
 
+    /** @var int[] Atm support types of notes */
     public const AVAILABLE_NOTES = [50,20];
 
+    /** @var array Count for each type of note */
     private array $notes;
 
     /**
      * @throws Exception
      */
-    public function __construct(int $note_20,int $note_50){
+    public function __construct(array $notes){
 
-        if($note_20 <0 || $note_50 < 0){
-            throw new Exception('Please provide non negative amounts!');
+        foreach(Atm::AVAILABLE_NOTES as $note){
+            if($notes[$note] < 0){
+                $this->notes = [];
+                throw new Exception('Please provide non negative amounts!');
+            }
+            $this->notes[$note] = $notes[$note];
         }
-
-        $this->notes = [
-            50 => $note_50,
-            20 => $note_20
-        ];
     }
 
     public function getNotes(){

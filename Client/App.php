@@ -18,7 +18,7 @@ class App
 
         println('Ready');
 
-        $atm = new Atm($notes[20],$notes[50]);
+        $atm = new Atm($notes);
 
         while(true){
             $this->printMenu();
