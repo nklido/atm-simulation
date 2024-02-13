@@ -112,6 +112,17 @@ class AtmTest extends TestCase
         $this->assertEquals(100,$atm->total());
     }
 
+    /** @test */
+    public function it_cannot_dispense_more_than_a_thousand_in_total_at_a_time(){
 
+        $this->expectExceptionMessage('You cannot withdraw more than 10,000 at a time!');
 
+        $atm = new Atm([
+            20 => 500,
+            50 => 500
+        ]);
+
+        $atm->dispense(50000);
+
+    }
 }

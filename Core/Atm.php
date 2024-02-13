@@ -11,7 +11,7 @@ class Atm{
 
     /** @var array Count for each type of note */
     private array $notes;
-
+    
     /**
      * @throws Exception
      */
@@ -26,7 +26,8 @@ class Atm{
         }
     }
 
-    public function getNotes(){
+    public function getNotes(): array
+    {
         return $this->notes;
     }
 
@@ -34,10 +35,14 @@ class Atm{
     /**
      * @throws Exception
      */
-    public function dispense($amount): void
+    public function dispense(int $amount): array
     {
         if($amount <= 0){
             throw new Exception('Please provide a positive number!');
+        }
+
+        if($amount > 10000){
+            throw new Exception('You cannot withdraw more than 10,000 at a time!');
         }
 
 
@@ -52,6 +57,7 @@ class Atm{
             $this->notes[$note] -= $num_notes;
         }
 
+        return $dispensed;
     }
 
 
