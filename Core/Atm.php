@@ -30,17 +30,6 @@ class Atm{
     }
 
 
-    public function getTwenties(): int
-    {
-        return $this->notes[20];
-    }
-
-    public function getFifties(): int
-    {
-        return $this->notes[50];
-    }
-
-
     /**
      * @throws Exception
      */

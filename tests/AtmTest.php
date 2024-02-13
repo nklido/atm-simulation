@@ -12,8 +12,8 @@ class AtmTest extends TestCase
 
         $atm = new Atm(15,25);
 
-        $this->assertEquals(15,$atm->getTwenties());
-        $this->assertEquals(25,$atm->getFifties());
+        $this->assertEquals(15,$atm->getNotes()[20]);
+        $this->assertEquals(25,$atm->getNotes()[50]);
     }
 
     /** @test */
@@ -26,13 +26,14 @@ class AtmTest extends TestCase
     /** @test */
     public function it_can_dispense_legal_combination_of_notes(){
 
-        $atm = new Atm(15,25);
+        $atm = new Atm(4,2);
 
 
         $atm->dispense(100);
 
-        $this->assertEquals(15,$atm->getTwenties());
-        $this->assertEquals(23,$atm->getFifties());
+        $this->assertEquals(4,$atm->getNotes()[20]);
+        $this->assertEquals(0,$atm->getNotes()[50]);
+        $this->assertEquals(80,$atm->total());
     }
 
 
@@ -41,12 +42,13 @@ class AtmTest extends TestCase
 
         $this->expectExceptionMessage('Please provide a positive number!');
 
-        $atm = new Atm(15,25);
+        $atm = new Atm(5,5);
 
         $atm->dispense(-100);
 
-        $this->assertEquals(15,$atm->getTwenties());
-        $this->assertEquals(25,$atm->getFifties());
+        $this->assertEquals(15,$atm->getNotes()[20]);
+        $this->assertEquals(25,$atm->getNotes()[50]);
+        $this->assertEquals(600,$atm->total());
     }
 
     /** @test */
@@ -58,8 +60,9 @@ class AtmTest extends TestCase
 
         $atm->dispense(120);
 
-        $this->assertEquals(0,$atm->getTwenties());
-        $this->assertEquals(2,$atm->getFifties());
+        $this->assertEquals(0,$atm->getNotes()[20]);
+        $this->assertEquals(2,$atm->getNotes()[50]);
+        $this->assertEquals(100,$atm->total());
     }
 
     /** @test */
@@ -71,8 +74,9 @@ class AtmTest extends TestCase
 
         $atm->dispense(30);
 
-        $this->assertEquals(2,$atm->getTwenties());
-        $this->assertEquals(2,$atm->getFifties());
+        $this->assertEquals(2,$atm->getNotes()[20]);
+        $this->assertEquals(2,$atm->getNotes()[50]);
+        $this->assertEquals(140,$atm->total());
     }
 
     /** @test */
@@ -83,8 +87,9 @@ class AtmTest extends TestCase
 
         $atm->dispense(60);
 
-        $this->assertEquals(0,$atm->getTwenties());
-        $this->assertEquals(2,$atm->getFifties());
+        $this->assertEquals(0,$atm->getNotes()[20]);
+        $this->assertEquals(2,$atm->getNotes()[50]);
+        $this->assertEquals(100,$atm->total());
     }
 
 
