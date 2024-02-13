@@ -97,7 +97,7 @@ class AtmTest extends TestCase
     }
 
     /** @test */
-    public function it_can_dispense_skip_notes_to_dispense_with_multiples_of_a_lesser_note(){
+    public function test_dispense_legal_combination_without_higher_denomination_first(){
 
 
         $atm = new Atm([

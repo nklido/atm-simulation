@@ -35,14 +35,14 @@ class Atm{
     /**
      * @throws Exception
      */
-    public function dispense(int $amount): array
+    public function dispense($amount): array
     {
         if($amount <= 0){
             throw new Exception('Please provide a positive number!');
         }
 
         if($amount > 10000){
-            throw new Exception('You cannot withdraw more than 10,000 at a time!');
+            throw new Exception('You can withdraw less than 10,000 at a time');
         }
 
 
