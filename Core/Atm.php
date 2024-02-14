@@ -11,11 +11,13 @@ class Atm{
 
     /** @var array Count for each type of note */
     private array $notes;
+
+    private CashDispenser $dispenser;
     
     /**
      * @throws Exception
      */
-    public function __construct(array $notes){
+    public function __construct(array $notes, CashDispenser $dispenser){
 
         foreach(Atm::AVAILABLE_NOTES as $note){
             if($notes[$note] < 0){
@@ -24,6 +26,7 @@ class Atm{
             }
             $this->notes[$note] = $notes[$note];
         }
+        $this->dispenser = $dispenser;
     }
 
     public function getNotes(): array
@@ -41,14 +44,7 @@ class Atm{
             throw new Exception('Please provide a positive number!');
         }
 
-        if($amount > 10000){
-            throw new Exception('You can withdraw less than 10,000 at a time');
-        }
-
-
-        $dispensed = [];
-        $this->dfs($amount, $this->notes, $dispensed);
-
+        $dispensed = $this->dispenser->dispense($this->notes,$amount);
         if (empty($dispensed)) {
             throw new Exception('Cannot dispense requested amount with available notes!');
         }
@@ -60,40 +56,6 @@ class Atm{
         return $dispensed;
     }
 
-
-    /**
-     * @TODO can be optimized with caching or with a bottom-up approach using dp.
-     * Brute force solution. Tries all combinations
-     * of notes until it finds one that can sum
-     * up to $amount.
-     * @param $amount
-     * @param $notes
-     * @param $dispensed
-     * @return bool
-     */
-    protected function dfs($amount,$notes,&$dispensed){
-        if($amount === 0){
-            return true;
-        }else if($amount < 0){
-            return false;
-        }
-        foreach($notes as $note => $count){
-            if($count === 0)
-                continue;
-
-            $notes[$note] -= 1;
-            if($this->dfs($amount - $note, $notes,$dispensed)){
-                if(array_key_exists($note,$dispensed)){
-                    $dispensed[$note]++;
-                }else{
-                    $dispensed[$note] = 1;
-                }
-                return true;
-            }
-        }
-        return false;
-    }
-
     public function total(): int{
         return array_sum(
             array_map(fn($note,$count) => $note * $count,
@@ -102,11 +64,6 @@ class Atm{
             )
         );
     }
-
-
-
-
-
 
 
 

@@ -3,6 +3,7 @@
 namespace Client;
 
 use Core\Atm;
+use Core\GreedyDispenser;
 
 class App
 {
@@ -19,7 +20,7 @@ class App
             $notes[$note] = (int) readline("Please enter count for {$note} notes: ");
         }
 
-        $atm = new Atm($notes);
+        $atm = new Atm($notes,new GreedyDispenser());
 
         while(true){
             $this->printMenu();
