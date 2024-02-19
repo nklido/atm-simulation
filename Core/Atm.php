@@ -12,12 +12,11 @@ class Atm{
     /** @var array Count for each type of note */
     private array $notes;
 
-    private CashDispenser $dispenser;
-    
+
     /**
      * @throws Exception
      */
-    public function __construct(array $notes, CashDispenser $dispenser){
+    public function __construct(array $notes, private readonly CashDispenser $dispenser){
 
         foreach(Atm::AVAILABLE_NOTES as $note){
             if($notes[$note] < 0){
@@ -26,7 +25,6 @@ class Atm{
             }
             $this->notes[$note] = $notes[$note];
         }
-        $this->dispenser = $dispenser;
     }
 
     public function getNotes(): array
