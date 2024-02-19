@@ -7,7 +7,7 @@ use Exception;
 class Atm{
 
     /** @var int[] Atm support types of notes */
-    public const AVAILABLE_NOTES = [50,20];
+    public const AVAILABLE_NOTES = [100,50,20];
 
     /** @var array Count for each type of note */
     private array $notes;
@@ -23,7 +23,7 @@ class Atm{
                 $this->notes = [];
                 throw new Exception('Please provide non negative amounts!');
             }
-            $this->notes[$note] = $notes[$note];
+            $this->notes[$note] = $notes[$note] ?? 0;
         }
     }
 

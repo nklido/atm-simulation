@@ -24,13 +24,18 @@ class GreedyDispenser implements CashDispenser
             }
 
 
+
             if($i === sizeof($notes) - 1 && $remainingAmount > 0){
                 $lastNote = array_keys($notes)[$i - 1];
 
                 if( isset($dispensed[$lastNote]) && end($dispensed) > 0){
                     $dispensed[$lastNote]--;
-                    if($dispensed[$lastNote]){
+                    if($dispensed[$lastNote] === 0){
                         unset($dispensed[$lastNote]);
+                    }
+
+                    if($notesToDispense > 0){
+                        $remainingAmount += $notesToDispense * $note;
                     }
                     $remainingAmount += $lastNote;
                     continue;
@@ -44,8 +49,10 @@ class GreedyDispenser implements CashDispenser
             $i++;
         }
 
+
         if($remainingAmount > 0)
             $dispensed = null;
+
 
         return $dispensed;
     }

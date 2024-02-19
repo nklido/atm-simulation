@@ -7,6 +7,7 @@ use Core\CashDispenser;
 use Core\GreedyDispenser;
 use Exception;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Metadata\DataProvider;
 
 class AtmTest extends TestCase
 {
@@ -39,21 +40,19 @@ class AtmTest extends TestCase
     }
 
     /**
-     * @dataProvider dispenserAlgorithm
+     * @dataProvider resultDataProvider
      * @test
      */
-    public function it_can_dispense_legal_combination_of_notes(CashDispenser $dispenser){
+    public function it_can_dispense_legal_combinations_of_notes(CashDispenser $dispenser,array $notes, int $dispense, array $remaining, int $total){
 
-        $atm = new Atm([
-            20 => 4,
-            50 => 2
-        ], $dispenser);
+        $atm = new Atm($notes, $dispenser);
 
-        $atm->dispense(100);
+        $atm->dispense($dispense);
 
-        $this->assertEquals(4,$atm->getNotes()[20]);
-        $this->assertEquals(0,$atm->getNotes()[50]);
-        $this->assertEquals(80,$atm->total());
+        foreach($remaining as $note => $value){
+            $this->assertEquals($value,$atm->getNotes()[$note]);
+        }
+        $this->assertEquals($total,$atm->total());
     }
 
 
@@ -142,5 +141,30 @@ class AtmTest extends TestCase
             [new BruteForceDispenser()],
             [new GreedyDispenser()]
         ];
+    }
+
+    public static function resultDataProvider(): array
+    {
+
+        $testCases = [
+          [[50 => 3, 20 => 3], 60, [50 => 3, 20 => 0], 150],
+          [[50 => 1, 20 => 3], 70, [50 => 0, 20 => 2], 40],
+          [[50 => 1, 20 => 3], 110, [50 => 0, 20 => 0], 0],
+          [[50 => 5, 20 => 3], 220, [50 => 1, 20 => 2], 90],
+          [[50 => 2, 20 => 4], 100, [50 => 0, 20 => 4], 80],
+          [[100 => 3,50 => 2, 20 => 4], 150, [100 => 2, 50 => 1, 20 => 4], 330],
+          [[100 => 0,50 => 2, 20 => 5], 150, [100 => 0, 50 => 1, 20 => 0], 50],
+          [[100 => 1,50 => 1, 20 => 5], 210, [100 => 0, 50 => 1, 20 => 0], 50],
+        ];
+
+        $combindation = [];
+
+        foreach(self::dispenserAlgorithm() as $algorithm){
+            foreach($testCases as $testCase){
+                $combindation[] = [$algorithm[0],...$testCase];
+            }
+        }
+
+        return $combindation;
     }
 }
